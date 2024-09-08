@@ -1,0 +1,9 @@
+# Makefile.base
+# Created: Tue, Jul 16, 2024 at 11:36:43 AM
+# @Purpose:
+# 	Shared targets POC
+
+shared_target:
+	@echo "Shared target invoked"
+	@echo " $(SHARED_VAR)"
+	# Add global build commands here

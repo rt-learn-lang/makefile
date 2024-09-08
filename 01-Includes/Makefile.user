@@ -1,0 +1,23 @@
+# Makefile.user
+
+# User-specific variables
+USER_LIB_DIR := /home/$(USER)/myproject/lib
+
+SHARED_VAR := user
+
+include Makefile.base
+
+# first:
+# 	echo "Default user target from non-default Makefile"
+
+all: user_target
+
+user_target:
+	@echo "Building for user-specific environment"
+	@echo "Using libraries from $(USER_LIB_DIR)"
+	# Add user-specific build commands here
+
+error:
+	$(info     Error log demo)
+	$(error    Execution breaks here)
+	$(info     This will not be executed)

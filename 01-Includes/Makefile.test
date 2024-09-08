@@ -1,0 +1,7 @@
+# Makefile.test
+
+all: user_target
+
+user_target:
+	@echo "Building for test-specific environment"
+	# Add test-specific build commands here

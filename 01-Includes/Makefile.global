@@ -1,0 +1,26 @@
+# Makefile.global
+# Created: Tue, Jul 16, 2024 at 9:40:22 AM
+
+SHARED_VAR := global
+
+include Makefile.base
+
+first:
+	echo "Default target from non-default Makefile"
+
+error:
+	$(info     Error log demo)
+	$(error    Execution breaks here)
+	$(info     This will not be executed)
+
+
+# Global variables
+GLOBAL_LIB_DIR := /usr/local/lib/myproject
+
+all: global_target
+
+global_target:
+	@echo "Building for global environment"
+	@echo "Using libraries from $(GLOBAL_LIB_DIR)"
+
+	# Add global build commands here
