@@ -8,7 +8,7 @@ ex01-invoke-another-target:
 # Directory containing the files
 DIR = ./csource
 
-# Get all the .txt files in the directory
+# Get all the .txt files in the directory. Must not have space in filename or directory.
 FILES = $(wildcard $(DIR)/*.cpp)
 
 # Target that processes all the files
@@ -25,3 +25,10 @@ ex-03-print-directory-files-sans-ext:
 	done
 
 
+ex-04-check-if-command-exists:
+	@if command -v cliclick >/dev/null 2>&1; then \
+	    echo "cliclick is installed"; \
+	else \
+	    echo "Error: cliclick is not installed" >&2; \
+	    exit 1; \
+	fi
