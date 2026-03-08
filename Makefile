@@ -32,3 +32,13 @@ ex-04-check-if-command-exists:
 	    echo "Error: cliclick is not installed" >&2; \
 	    exit 1; \
 	fi
+
+# Heredoc doesn't work with osascript, so we use printf to print the script to the terminal.
+ex-05-applescript-multi-line:
+	@printf '%s\n' \
+		'tell application "Finder"' \
+		'	activate' \
+		'	display dialog "Hello from Makefile"' \
+		'end tell' \
+		| osascript
+	
