@@ -41,4 +41,3 @@ ex-05-applescript-multi-line:
 		'	display dialog "Hello from Makefile"' \
 		'end tell' \
 		| osascript
-	
