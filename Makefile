@@ -19,6 +19,28 @@ _build-folder-lib = \
 	done; \
 	echo "Done building $(1) scripts\n"
 
+# $1 - Title
+# $2 - Folder path
+# $3 - Version
+_build-versioned-directory = \
+	@echo "Building $(1) version $(3) compatible scripts..."; \
+	find "$(2)" -maxdepth 1 -type d -name '[0-9]*.[0-9]*' -print0 | sort -zV | \
+	while IFS= read -r -d '' d; do \
+		dirver=$$(basename "$$d"); \
+		awkver=$$(awk 'BEGIN {if ("'$$dirver'" < "'$(3)'") print 1; else print 0}'); \
+		if [ "$$awkver" -eq 1 ]; then \
+			echo "  Compiling AppleScripts in \"$$d\"..."; \
+			find "$$d" -maxdepth 1 -type f -name '*.applescript' -print0 | \
+			while IFS= read -r -d '' file; do \
+				no_ext=$${file%.applescript}; \
+				echo "    Building \"$$no_ext\""; \
+			done; \
+		else \
+			echo "  Skipping directory \"$$d\" (version \"$$dirver\" not less than $(3))"; \
+		fi \
+	done; \
+	echo "Done building $(1) up to $(3) scripts\n"
+
 
 # Start -----------------------------------------------------------------------
 
@@ -32,7 +54,7 @@ ex01-invoke-another-target:
 # Directory containing the files
 DIR = ./csource
 
-# Get all the .txt files in the directory. Must not have space in filename or directory.
+# Get all the .cpp files in the directory. Must not have space in filename or directory.
 FILES = $(wildcard $(DIR)/*.cpp)
 
 # Target that processes all the files
@@ -84,7 +106,6 @@ ex-08-check-scpt-exists:
 	echo TODO
 
 
-
 # ex-09-confirmation:
 # 	@printf 'This will remove the app-notes scripts from the system. Proceed? [y/N] '; IFS= read -r reply; reply=$${reply:-n}; \
 # 	case "$$reply" in \
@@ -109,3 +130,8 @@ ex-09-confirmation:
 			exit 1 ;; \
 	esac
 	@echo Proceeding...
+
+
+CURRENT_VERSION = 2.1
+ex-10-build-applescript-dirs:
+	$(call _build-versioned-directory,Some App,directories spaced,$(CURRENT_VERSION))
