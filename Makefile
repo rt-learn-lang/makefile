@@ -1,12 +1,12 @@
 # Runs the last target definition in this Makefile (excluding this rule).
 # Append new targets below; keep this block at the end of the file.
-.PHONY: latest
 latest:
 	@tf="$(firstword $(MAKEFILE_LIST))"; \
 	LAST=$$(grep -E '^[A-Za-z0-9][A-Za-z0-9_.-]*:' "$$tf" | grep -v '^latest:' | tail -1 | cut -d: -f1); \
 	test -n "$$LAST" || { echo 'latest: no target lines found in' "$$tf" 1>&2; exit 1; }; \
 	echo "$(MAKE) $$LAST"; \
 	$(MAKE) $$LAST
+.PHONY: latest
 
 
 # Make functions --------------------------------------------------------------
@@ -135,3 +135,29 @@ ex-09-confirmation:
 CURRENT_VERSION = 2.1
 ex-10-build-applescript-dirs:
 	$(call _build-versioned-directory,Some App,directories spaced,$(CURRENT_VERSION))
+
+
+# File that stores the last execution timestamp
+LAST_STEP_TIMESTAMP := .run-last-step.timestamp
+
+# Minimum elapsed time in seconds
+LAST_STEP_COOLDOWN := 10
+ex-11-time-block:
+	@now=$$(date +%s); \
+	if [ ! -f "$(LAST_STEP_TIMESTAMP)" ]; then \
+		echo "First run"; \
+		echo $$now > "$(LAST_STEP_TIMESTAMP)"; \
+		echo "Running target..."; \
+	else \
+		last=$$(cat "$(LAST_STEP_TIMESTAMP)"); \
+		elapsed=$$((now - last)); \
+		if [ $$elapsed -ge $(LAST_STEP_COOLDOWN) ]; then \
+			echo "Cooldown passed ($$elapsed sec)"; \
+			echo $$now > "$(LAST_STEP_TIMESTAMP)"; \
+			echo "Running target..."; \
+		else \
+			echo "Blocked. Only $$elapsed sec elapsed."; \
+			exit 0; \
+		fi; \
+	fi
+.PHONY: ex-11-time-block
