@@ -161,3 +161,20 @@ ex-11-time-block:
 		fi; \
 	fi
 .PHONY: ex-11-time-block
+
+
+CONTAINER_NAME := mysql8-workp1
+DOCKER_VOLUME_PATH := $(HOME)/docker/workp1/mysql8
+DOCKER_IMAGE := mysql:8.0.42
+
+ex-12-user-prompt:
+	@read -sp "Enter MySQL development root password: " MYSQL_PWD; \
+	echo ""; \
+	docker run -d \
+		--rm \
+		--name $(CONTAINER_NAME) \
+		-e MYSQL_ROOT_PASSWORD=$$MYSQL_PWD \
+		-p 3306:3306 \
+		-v $(DOCKER_VOLUME_PATH):/var/lib/mysql \
+		$(DOCKER_IMAGE)
+.PHONY: ex-12-user-prompt
